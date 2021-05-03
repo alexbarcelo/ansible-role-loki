@@ -19,6 +19,7 @@ def AnsibleDefaults():
     "/etc/loki",
     "/etc/loki/file_sd",
     "/var/lib/promtail",
+    "/var/lib/loki",
 ])
 def test_directories(host, dir):
     d = host.file(dir)

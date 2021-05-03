@@ -39,6 +39,7 @@ def test_files(host, files):
 
 @pytest.mark.parametrize("files", [
     "/etc/systemd/system/loki.service",
+    "/opt/loki",
     "/usr/local/bin/loki",
     "/etc/loki/loki-config.yml"
 ])

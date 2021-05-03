@@ -15,10 +15,8 @@ def AnsibleDefaults():
 
 
 @pytest.mark.parametrize("dir", [
-    "/opt/promtail",
-    "/etc/loki",
-    "/etc/loki/file_sd",
-    "/var/lib/promtail",
+    "/opt/loki",
+    "/etc/loki"
 ])
 def test_directories(host, dir):
     d = host.file(dir)
@@ -38,9 +36,12 @@ def test_files(host, files):
 
 
 @pytest.mark.parametrize("files", [
+    "/var/lib/promtail",
+    "/opt/promtail",
     "/etc/systemd/system/promtail.service",
     "/usr/local/bin/promtail",
     "/etc/loki/promtail-config.yml"
+    "/etc/loki/file_sd",
 ])
 def test_outsider_files(host, files):
     f = host.file(files)
@@ -62,10 +63,6 @@ def test_services(host):
 
 def test_version(host, AnsibleDefaults):
     version = os.getenv('LOKI', AnsibleDefaults['loki_version'])
-    out = host.run("/usr/local/bin/promtail --version").stdout
-    assert version in out
-    assert "promtail" in out
-
     out = host.run("/usr/local/bin/loki --version").stdout
     assert version in out
     assert "loki" in out
