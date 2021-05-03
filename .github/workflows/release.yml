@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-      - uses: actions/checkout@master
+        uses: actions/checkout@master
       - name: galaxy
         uses: robertdebock/galaxy-action@1.1.0
         with:
