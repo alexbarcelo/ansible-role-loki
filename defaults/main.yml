@@ -16,8 +16,8 @@ loki_storage_dir: /var/lib/loki
 loki_user_additional_groups: "adm"
 
 loki_config_server:
-  http_listen_port: 9080
-  grpc_listen_port: 0
+  http_listen_port: 3100
+  grpc_listen_port: 9095
   
 
 loki_config_storage:
@@ -61,7 +61,7 @@ promtail_log_level: info
 # One of: debug, info, warn, error
 
 promtail_config_server:
-  http_listen_port: 9081
+  http_listen_port: 9080
   grpc_listen_port: 0
 
 promtail_loki_server_url: http://127.0.0.1:3100

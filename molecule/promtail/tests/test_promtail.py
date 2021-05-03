@@ -37,6 +37,12 @@ def test_files(host, files):
     assert f.is_file
 
 
+def test_sockets(host):
+    # Promtail HTTP
+    s = host.socket("tcp://0.0.0.0:9080")
+    assert s.is_listening
+
+
 @pytest.mark.parametrize("files", [
     "/etc/systemd/system/loki.service",
     "/opt/loki",

@@ -48,6 +48,20 @@ def test_outsider_files(host, files):
     assert not f.exists
 
 
+def test_sockets(host):
+    # Loki GRPC
+    s = host.socket("tcp://0.0.0.0:9095")
+    assert s.is_listening
+
+    # Loki HTTP
+    s = host.socket("tcp://0.0.0.0:3100")
+    assert s.is_listening
+
+    # Promtail HTTP, which should not be running
+    s = host.socket("tcp://0.0.0.0:9080")
+    assert not s.is_listening
+
+
 def test_user(host):
     assert host.group("loki").exists
     assert host.user("loki").exists

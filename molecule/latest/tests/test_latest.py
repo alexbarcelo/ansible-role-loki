@@ -19,13 +19,19 @@ def test_service(host):
     assert s.is_running
 
 
-def test_loki_http_socket(host):
-    s = host.socket("tcp://0.0.0.0:9080")
+def test_sockets(host):
+    # Loki GRPC
+    s = host.socket("tcp://0.0.0.0:9095")
     assert s.is_listening
 
+    # Loki HTTP
+    s = host.socket("tcp://0.0.0.0:3100")
+    assert s.is_listening
 
-def test_promtail_http_socket(host):
-    s = host.socket("tcp://0.0.0.0:9081")
+    # Promtail GRPC is random, and not extremely relevant
+
+    # Promtail HTTP
+    s = host.socket("tcp://0.0.0.0:9080")
     assert s.is_listening
 
 
