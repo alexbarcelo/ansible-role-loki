@@ -27,17 +27,24 @@ def test_directories(host, dir):
 
 
 @pytest.mark.parametrize("files", [
-    "/etc/systemd/system/loki.service",
     "/etc/systemd/system/promtail.service",
     "/usr/local/bin/promtail",
-    "/usr/local/bin/loki",
-    "/etc/loki/promtail-config.yml",
-    "/etc/loki/loki-config.yml"
+    "/etc/loki/promtail-config.yml"
 ])
 def test_files(host, files):
     f = host.file(files)
     assert f.exists
     assert f.is_file
+
+
+@pytest.mark.parametrize("files", [
+    "/etc/systemd/system/loki.service",
+    "/usr/local/bin/loki",
+    "/etc/loki/loki-config.yml"
+])
+def test_outsider_files(host, files):
+    f = host.file(files)
+    assert not f.exists
 
 
 def test_user(host):
@@ -50,17 +57,7 @@ def test_services(host):
     assert s.is_running
 
     s = host.service("loki")
-    assert s.is_running
-
-
-def test_loki_http_socket(host):
-    s = host.socket("tcp://0.0.0.0:9080")
-    assert s.is_listening
-
-
-def test_promtail_http_socket(host):
-    s = host.socket("tcp://0.0.0.0:9081")
-    assert s.is_listening
+    assert not s.is_running
 
 
 def test_version(host, AnsibleDefaults):
@@ -68,7 +65,3 @@ def test_version(host, AnsibleDefaults):
     out = host.run("/usr/local/bin/promtail --version").stdout
     assert version in out
     assert "promtail" in out
-
-    out = host.run("/usr/local/bin/loki --version").stdout
-    assert version in out
-    assert "loki" in out

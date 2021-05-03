@@ -4,4 +4,5 @@
   roles:
     - role: alexbarcelo.loki
       vars:
-        loki_version: "latest"
+        promtail_install: yes
+        loki_install: no

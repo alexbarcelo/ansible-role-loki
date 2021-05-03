@@ -28,16 +28,23 @@ def test_directories(host, dir):
 
 @pytest.mark.parametrize("files", [
     "/etc/systemd/system/loki.service",
-    "/etc/systemd/system/promtail.service",
-    "/usr/local/bin/promtail",
     "/usr/local/bin/loki",
-    "/etc/loki/promtail-config.yml",
     "/etc/loki/loki-config.yml"
 ])
 def test_files(host, files):
     f = host.file(files)
     assert f.exists
     assert f.is_file
+
+
+@pytest.mark.parametrize("files", [
+    "/etc/systemd/system/promtail.service",
+    "/usr/local/bin/promtail",
+    "/etc/loki/promtail-config.yml"
+])
+def test_outsider_files(host, files):
+    f = host.file(files)
+    assert not f.exists
 
 
 def test_user(host):
@@ -47,20 +54,10 @@ def test_user(host):
 
 def test_services(host):
     s = host.service("promtail")
-    assert s.is_running
+    assert not s.is_running
 
     s = host.service("loki")
     assert s.is_running
-
-
-def test_loki_http_socket(host):
-    s = host.socket("tcp://0.0.0.0:9080")
-    assert s.is_listening
-
-
-def test_promtail_http_socket(host):
-    s = host.socket("tcp://0.0.0.0:9081")
-    assert s.is_listening
 
 
 def test_version(host, AnsibleDefaults):
