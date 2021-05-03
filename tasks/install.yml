@@ -13,7 +13,6 @@
   when: not binary.stat.exists
 
 - name: Unpack {{ target }} binaries
-  ignore_errors: "{{ ansible_check_mode }}"
   unarchive:
     src: "{{ loki_tmp_dir }}/{{ target_version }}_{{ target }}-linux-{{ go_arch }}.zip"
     dest: "{{ loki_install_dir }}/{{ target_version }}"
@@ -24,7 +23,6 @@
 - name: Create symlink to latest {{ target }} version
   notify:
     - Restart {{ target }}
-  ignore_errors: "{{ ansible_check_mode }}"
   file:
     state: link
     src: "{{ loki_install_dir }}/{{ target_version }}/{{ target }}-linux-{{ go_arch }}"
