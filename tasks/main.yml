@@ -32,6 +32,7 @@
     target: "promtail"
     target_version: "{{ promtail_version }}"
     target_checksum: "{{ __promtail_checksum }}"
+    target_install_dir: "{{ promtail_install_dir }}"
 
 - name: Install loki
   include_tasks: 
@@ -48,6 +49,7 @@
     target: "loki"
     target_version: "{{ loki_version }}"
     target_checksum: "{{ __loki_checksum }}"
+    target_install_dir: "{{ loki_install_dir }}"
 
 - name: Ensure promtail service is started and enabled
   become: True

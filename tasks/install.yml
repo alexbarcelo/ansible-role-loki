@@ -1,7 +1,7 @@
 ---
 - name: Check {{ target }} binary
   stat:
-    path: "{{ loki_install_dir }}/{{ target_version }}/{{ target }}-linux-{{ go_arch }}"
+    path: "{{ target_install_dir }}/{{ target_version }}/{{ target }}-linux-{{ go_arch }}"
   register: binary
 
 - name: Download {{ target }} binaries
@@ -15,8 +15,8 @@
 - name: Unpack {{ target }} binaries
   unarchive:
     src: "{{ loki_tmp_dir }}/{{ target_version }}_{{ target }}-linux-{{ go_arch }}.zip"
-    dest: "{{ loki_install_dir }}/{{ target_version }}"
-    creates: "{{ loki_install_dir }}/{{ target_version }}/{{ target }}-linux-{{ go_arch }}"
+    dest: "{{ target_install_dir }}/{{ target_version }}"
+    creates: "{{ target_install_dir }}/{{ target_version }}/{{ target }}-linux-{{ go_arch }}"
     mode: 0755
     remote_src: True
 
@@ -25,7 +25,7 @@
     - Restart {{ target }}
   file:
     state: link
-    src: "{{ loki_install_dir }}/{{ target_version }}/{{ target }}-linux-{{ go_arch }}"
+    src: "{{ target_install_dir }}/{{ target_version }}/{{ target }}-linux-{{ go_arch }}"
     dest: /usr/local/bin/{{ target }}
     mode: 0755
 
