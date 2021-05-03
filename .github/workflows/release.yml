@@ -1,25 +1,10 @@
-name: changelog and release automation
+name: release automation
 on:
   push:
     branches:
       - master
 
 jobs:
-  changelog:
-    runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, '[RELEASE]')"
-    steps:
-      - uses: actions/checkout@master
-      - name: calculate next version
-        id: version
-        uses: patrickjahns/version-drafter-action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: update changelog
-        uses: patrickjahns/chlgr@v1
-        with:
-          release-version: ${{ steps.version.outputs.next-version }}
-
   release:
     runs-on: ubuntu-latest
     if: "contains(github.event.head_commit.message, '[RELEASE]')"

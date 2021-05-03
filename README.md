@@ -1,9 +1,9 @@
 # Ansible Role: promtail
 
-[![Test](https://github.com/patrickjahns/ansible-role-promtail/workflows/Test/badge.svg)](https://github.com/patrickjahns/ansible-role-promtail/actions?query=workflow%3ATest+branch%3Amaster)
+[![Test](https://github.com/alexbarcelo/ansible-role-loki/workflows/Test/badge.svg)](https://github.com/alexbarcelo/ansible-role-loki/actions?query=workflow%3ATest+branch%3Amaster)
 [![License](https://img.shields.io/badge/license-MIT%20License-brightgreen.svg)](https://opensource.org/licenses/MIT)
-[![Ansible Role](https://img.shields.io/badge/ansible%20role-patrickjahns.promtail-blue.svg)](https://galaxy.ansible.com/patrickjahns/promtail/)
-[![GitHub tag](https://img.shields.io/github/tag/patrickjahns/ansible-role-promtail.svg)](https://github.com/patrickjahns/ansible-role-promtail/tags)
+[![Ansible Role](https://img.shields.io/badge/ansible%20role-alexbarcelo.loki-blue.svg)](https://galaxy.ansible.com/alexbarcelo/loki/)
+[![GitHub tag](https://img.shields.io/github/tag/alexbarcelo/ansible-role-loki.svg)](https://github.com/alexbarcelo/ansible-role-loki/tags)
 
 ## Description
 

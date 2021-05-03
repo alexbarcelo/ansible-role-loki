@@ -1,12 +1,13 @@
 # Standards: 0.1
 ---
 galaxy_info:
-  author: Patrick Jahns
-  description: Deploy (loki) promtail
-  role_name: promtail
+  author: Alex Barcelo
+  description: Deploy loki and promtail
+  role_name: loki
+  namespace: alexbarcelo
   company: none
   license: MIT
-  min_ansible_version: 2.7
+  min_ansible_version: 2.10
   platforms:
     - name: EL
       versions:
