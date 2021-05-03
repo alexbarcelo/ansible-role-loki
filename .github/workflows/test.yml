@@ -31,8 +31,6 @@ jobs:
           - ANSIBLE: "3.3"
             MOLECULE_DISTRO: ubuntu2004
           - ANSIBLE: "3.3"
-            MOLECULE_DISTRO: ubuntu2104
-          - ANSIBLE: "3.3"
             MOLECULE_DISTRO: debian10
           - ANSIBLE: "3.3"
             MOLECULE_DISTRO: centos7

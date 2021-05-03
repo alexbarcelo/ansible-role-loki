@@ -7,7 +7,7 @@ galaxy_info:
   namespace: alexbarcelo
   company: none
   license: MIT
-  min_ansible_version: 2.10
+  min_ansible_version: "2.10"
   platforms:
     - name: EL
       versions:
@@ -15,15 +15,18 @@ galaxy_info:
         - 8
     - name: Fedora
       versions:
-        - all
+        - 29
+        - 30
+        - 31
+        - 32
+        - 33
     - name: Ubuntu
       versions:
-        - disco
         - bionic
-        - xenial
+        - focal
+        - hirsute
     - name: Debian
       versions:
-        - stretch
         - buster
   galaxy_tags:
     - promtail
