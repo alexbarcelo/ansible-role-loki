@@ -70,7 +70,6 @@ def test_sockets(host):
     assert s.is_listening
 
 
-
 def test_version(host, AnsibleDefaults):
     version = os.getenv('LOKI', AnsibleDefaults['loki_version'])
     out = host.run("/usr/local/bin/promtail --version").stdout
