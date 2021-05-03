@@ -1,3 +1,4 @@
+---
 - name: Check {{ target }} binary
   stat:
     path: "{{ loki_install_dir }}/{{ target_version }}/{{ target }}-linux-{{ go_arch }}"
