@@ -1,0 +1,16 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
+{{ ansible_managed | comment }}
+# https://grafana.com/docs/loki/latest/configuration/
+auth_enabled: {{ loki_config_auth_enabled }}
+
+server:
+  {{ loki_config_server | to_nice_yaml(indent=2) | indent(2, False) }}
+
+storage_config:
+  {{ loki_config_storage | to_nice_yaml(indent=2) | indent(2, False) }}
+
+schema_config:
+  {{ loki_config_schema | to_nice_yaml(indent=2) | indent(2, False) }}
+
+ingester:
+  {{ loki_config_ingester | to_nice_yaml(indent=2) | indent(2, False) }}

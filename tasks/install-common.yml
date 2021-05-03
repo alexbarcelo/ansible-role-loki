@@ -1,0 +1,95 @@
+---
+- name: Ensure unzip package is available
+  package:
+    name: unzip
+    state: present
+    update_cache: True
+
+- name: Create loki group
+  group:
+    name: "{{ loki_system_group }}"
+    state: present
+    system: True
+  when: loki_system_group != "root"
+
+- name: Create the loki user
+  user:
+    name: "{{ loki_system_user }}"
+    group: "{{ loki_system_group }}"
+    groups: "{{ loki_user_additional_groups }}"
+    append: True
+    shell: /usr/sbin/nologin
+    system: True
+    createhome: False
+    home: /
+  when: loki_system_user != "root"
+
+- name: Ensure /usr/local/bin exists
+  file:
+    path: /usr/local/bin
+    state: directory
+    mode: 0755
+
+- name: Create config directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: "{{ loki_system_group }}"
+    mode: 0770
+  loop:
+    - "{{ loki_config_dir }}"
+
+- name: Create promtail-specific directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: "{{ loki_system_group }}"
+    mode: 0770
+  loop:
+    - "{{ promtail_config_file_sd_dir }}"
+    - "{{ promtail_positions_directory }}"
+  when:
+    - promtail_install
+
+- name: Create loki-specific directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: "{{ loki_system_group }}"
+    mode: 0770
+  loop:
+    - "{{ loki_storage_dir }}"
+    - "{{ loki_storage_dir }}/index"
+    - "{{ loki_storage_dir }}/chunks"
+  when:
+    - loki_install
+    - loki_storage_dir
+
+- name: Create application dirs for loki
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ loki_system_user }}"
+    group: "{{ loki_system_group }}"
+    mode: 0755
+  with_items:
+    - "{{ loki_install_dir }}"
+    - "{{ loki_install_dir }}/{{ loki_version }}"
+  when:
+    - loki_install
+
+- name: Create application dirs for promtail
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ loki_system_user }}"
+    group: "{{ loki_system_group }}"
+    mode: 0755
+  with_items:
+    - "{{ promtail_install_dir }}"
+    - "{{ promtail_install_dir }}/{{ promtail_version }}"
+  when:
+    - promtail_install

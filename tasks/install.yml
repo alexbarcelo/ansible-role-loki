@@ -1,104 +1,49 @@
----
-- name: Ensure unzip package is available
-  package:
-    name: unzip
-    state: present
-    update_cache: True
-
-- name: Create promtail group
-  group:
-    name: "{{ promtail_system_group }}"
-    state: present
-    system: True
-  when: promtail_system_group != "root"
-
-- name: Create the promtail user
-  user:
-    name: "{{ promtail_system_user }}"
-    group: "{{ promtail_system_group }}"
-    groups: "{{ promtail_user_additional_groups }}"
-    append: True
-    shell: /usr/sbin/nologin
-    system: True
-    createhome: False
-    home: /
-  when: promtail_system_user != "root"
-
-- name: Ensure /usr/local/bin exists
-  file:
-    path: /usr/local/bin
-    state: directory
-    mode: 0755
-
-- name: Create config directories
-  file:
-    path: "{{ item }}"
-    state: directory
-    owner: root
-    group: "{{ promtail_system_group }}"
-    mode: 0770
-  loop:
-    - "{{ promtail_config_dir }}"
-    - "{{ promtail_config_file_sd_dir }}"
-    - "{{ promtail_positions_directory }}"
-
-- name: Create application dirs
-  file:
-    path: "{{ item }}"
-    state: directory
-    owner: "{{ promtail_system_user }}"
-    group: "{{ promtail_system_group }}"
-    mode: 0755
-  with_items:
-    - "{{ promtail_install_dir }}"
-    - "{{ promtail_install_dir }}/{{ promtail_version }}"
-
-- name: Check promtail binary
+- name: Check {{ target }} binary
   stat:
-    path: "{{ promtail_install_dir }}/{{ promtail_version }}/promtail-linux-{{ go_arch }}"
-  register: promtail_binary
+    path: "{{ loki_install_dir }}/{{ target_version }}/{{ target }}-linux-{{ go_arch }}"
+  register: binary
 
-- name: Download promtail binaries
+- name: Download {{ target }} binaries
   get_url:
-    url: "{{ promtail_dist_url }}"
-    dest: "{{ promtail_tmp_dir }}/{{ promtail_version }}_promtail-linux-{{ go_arch }}.zip"
+    url: "{{ binary_dist_url }}"
+    dest: "{{ loki_tmp_dir }}/{{ target_version }}_{{ target }}-linux-{{ go_arch }}.zip"
     force: True
-    checksum: "sha256:{{ __promtail_checksum }}"
-  when: not promtail_binary.stat.exists
+    checksum: "sha256:{{ target_checksum }}"
+  when: not binary.stat.exists
 
-- name: Unpack promtail binaries
+- name: Unpack {{ target }} binaries
   ignore_errors: "{{ ansible_check_mode }}"
   unarchive:
-    src: "{{ promtail_tmp_dir }}/{{ promtail_version }}_promtail-linux-{{ go_arch }}.zip"
-    dest: "{{ promtail_install_dir }}/{{ promtail_version }}"
-    creates: "{{ promtail_install_dir }}/{{ promtail_version }}/promtail-linux-{{ go_arch }}"
+    src: "{{ loki_tmp_dir }}/{{ target_version }}_{{ target }}-linux-{{ go_arch }}.zip"
+    dest: "{{ loki_install_dir }}/{{ target_version }}"
+    creates: "{{ loki_install_dir }}/{{ target_version }}/{{ target }}-linux-{{ go_arch }}"
     mode: 0755
     remote_src: True
 
-- name: Create symlink to latest version
+- name: Create symlink to latest {{ target }} version
   notify:
-    - Restart promtail
+    - Restart {{ target }}
   ignore_errors: "{{ ansible_check_mode }}"
   file:
     state: link
-    src: "{{ promtail_install_dir }}/{{ promtail_version }}/promtail-linux-{{ go_arch }}"
-    dest: /usr/local/bin/promtail
+    src: "{{ loki_install_dir }}/{{ target_version }}/{{ target }}-linux-{{ go_arch }}"
+    dest: /usr/local/bin/{{ target }}
     mode: 0755
 
-- name: Write config
+- name: Write {{ target }} configuration file
   notify:
-    - Restart promtail
+    - Restart {{ target }}
   template:
-    src: config.j2
-    dest: "{{ promtail_config_file }}"
+    src: "{{ target }}-config.j2"
+    dest: "{{ loki_config_dir }}/{{ target }}-config.yml"
     owner: root
-    group: "{{ promtail_system_group }}"
+    group: "{{ loki_system_group }}"
     mode: 0644
 
-- name: Create systemd service unit
+- name: Create systemd service unit for {{ target }}
   notify:
-    - Restart promtail
+    - Restart {{ target }}
   template:
-    src: service.j2
-    dest: /etc/systemd/system/promtail.service
+    src: "{{ target }}.service.j2"
+    dest: /etc/systemd/system/{{ target }}.service
     mode: 0644

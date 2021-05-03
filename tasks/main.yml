@@ -1,14 +1,53 @@
 ---
-- include: preflight.yml
+- include_tasks:
+    file: preflight.yml
   tags:
     - promtail_install
     - promtail
+    - loki_install
+    - loki
 
-- include: install.yml
-  become: True
+- include_tasks:
+    file: install-common.yml
+    apply:
+      become: True
   tags:
     - promtail_install
     - promtail
+    - loki_install
+    - loki
+
+- name: Install promtail
+  include_tasks: 
+    file: install.yml
+    apply:
+      become: True
+      tags:
+        - promtail_install
+        - promtail
+  tags:
+    - always
+  when: promtail_install
+  vars:
+    target: "promtail"
+    target_version: "{{ promtail_version }}"
+    target_checksum: "{{ __promtail_checksum }}"
+
+- name: Install loki
+  include_tasks: 
+    file: install.yml
+    apply:
+      become: True
+      tags:
+        - loki_install
+        - loki
+  tags:
+    - always
+  when: loki_install
+  vars:
+    target: "loki"
+    target_version: "{{ loki_version }}"
+    target_checksum: "{{ __loki_checksum }}"
 
 - name: Ensure promtail service is started and enabled
   become: True
@@ -17,6 +56,19 @@
     name: promtail
     state: started
     enabled: True
+  when: promtail_install
   tags:
     - promtail_run
     - promtail
+
+- name: Ensure loki service is started and enabled
+  become: True
+  systemd:
+    daemon_reload: True
+    name: loki
+    state: started
+    enabled: True
+  when: loki_install
+  tags:
+    - loki_run
+    - loki

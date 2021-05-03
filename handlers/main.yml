@@ -8,3 +8,13 @@
   tags:
     - promtail_run
     - promtail
+
+- name: Restart loki
+  become: True
+  systemd:
+    name: loki
+    state: restarted
+    daemon_reload: True
+  tags:
+    - loki_run
+    - loki
